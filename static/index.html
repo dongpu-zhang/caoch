@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d10">
+<title>Coach G · 顶级私教 | Grok 4.7</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b0d10'/><path d='M14 26h6v12h-6zM44 26h6v12h-6zM20 30h24v4H20z' fill='%23C6FF3D'/></svg>">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="17" width="6" height="14" rx="2"/><rect x="11" y="13" width="6" height="22" rx="2"/><rect x="31" y="13" width="6" height="22" rx="2"/><rect x="38" y="17" width="6" height="14" rx="2"/><rect x="17" y="22" width="14" height="4" rx="1"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">COACH <span>G</span></div>
+        <div class="brand-sub">顶级资深私教 · AI</div>
+      </div>
+      <button class="icon-btn only-mobile" id="closeSidebar" aria-label="关闭">✕</button>
+    </div>
+
+    <section class="card" id="profileCard">
+      <div class="card-head">
+        <h3><span class="dot"></span>学员档案</h3>
+        <span class="muted small" id="profileSaved">自动保存</span>
+      </div>
+      <form id="profileForm" autocomplete="off">
+        <div class="grid2">
+          <label>性别
+            <div class="seg" data-name="sex">
+              <button type="button" data-v="男">男</button><button type="button" data-v="女">女</button>
+            </div>
+          </label>
+          <label>年龄<input name="age" type="number" min="12" max="90" placeholder="岁"></label>
+          <label>身高<input name="height" type="number" min="120" max="230" placeholder="cm"></label>
+          <label>体重<input name="weight" type="number" min="30" max="250" step="0.1" placeholder="kg"></label>
+          <label>体脂率<input name="bodyfat" type="number" min="3" max="60" step="0.1" placeholder="% 可选"></label>
+          <label>每周训练<select name="days"><option value="">天数</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
+        </div>
+        <label>目标
+          <select name="goal">
+            <option value="">选择目标</option><option>减脂</option><option>减脂保肌（重组）</option><option>增肌</option><option>力量提升</option><option>体态改善</option><option>提升体能/心肺</option><option>健康维持</option>
+          </select>
+        </label>
+        <div class="grid2">
+          <label>训练水平
+            <select name="level"><option value="">选择</option><option>新手（&lt;6个月）</option><option>初级（6–12个月）</option><option>中级（1–3年）</option><option>高级（3年以上）</option></select>
+          </label>
+          <label>日常活动
+            <select name="activity">
+              <option value="1.2">久坐办公</option><option value="1.375" selected>轻度活动</option><option value="1.55">中度活动</option><option value="1.725">高度活动</option><option value="1.9">体力劳动/运动员</option>
+            </select>
+          </label>
+        </div>
+        <label>可用器械</label>
+        <div class="chips-select" data-name="equipment">
+          <button type="button">商业健身房</button><button type="button">哑铃</button><button type="button">杠铃</button><button type="button">壶铃</button><button type="button">弹力带</button><button type="button">龙门架</button><button type="button">跑步机</button><button type="button">动感单车</button><button type="button">筋膜枪</button><button type="button">泡沫轴</button><button type="button">徒手</button>
+        </div>
+        <label>伤病 / 健康状况<input name="injuries" placeholder="如：腰椎间盘突出、膝盖不适、高血压…"></label>
+        <label>饮食偏好<input name="diet" placeholder="如：外卖为主、不吃牛肉、素食…"></label>
+      </form>
+    </section>
+
+    <section class="card calc">
+      <div class="card-head"><h3><span class="dot orange"></span>代谢计算器</h3><span class="muted small">Mifflin-St Jeor</span></div>
+      <div class="calc-grid">
+        <div class="stat"><div class="stat-label">BMR 基础代谢</div><div class="stat-val" id="bmr">—</div><div class="stat-unit">kcal/天</div></div>
+        <div class="stat"><div class="stat-label">TDEE 总消耗</div><div class="stat-val" id="tdee">—</div><div class="stat-unit">kcal/天</div></div>
+        <div class="stat accent"><div class="stat-label">减脂目标</div><div class="stat-val" id="cut">—</div><div class="stat-unit">kcal/天 (−20%)</div></div>
+        <div class="stat"><div class="stat-label">BMI</div><div class="stat-val" id="bmi">—</div><div class="stat-unit" id="bmiTag">&nbsp;</div></div>
+      </div>
+      <div class="macro" id="macro" hidden>
+        <div class="macro-bar"><i class="p"></i><i class="f"></i><i class="c"></i></div>
+        <div class="macro-legend"><span><b class="p"></b>蛋白 <em id="mp">—</em>g</span><span><b class="f"></b>脂肪 <em id="mf">—</em>g</span><span><b class="c"></b>碳水 <em id="mc">—</em>g</span></div>
+      </div>
+      <p class="muted tiny">估算值，仅供参考。填写档案后自动计算，并作为上下文发送给教练。</p>
+    </section>
+
+    <div class="side-foot">
+      <button class="ghost-btn" id="clearChat">清空对话</button>
+      <span class="muted tiny" id="modelInfo">OCI · xai.grok-4.7</span>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn only-mobile" id="openSidebar" aria-label="档案">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+      </button>
+      <div class="coach">
+        <div class="avatar">G<span class="online"></span></div>
+        <div>
+          <div class="coach-name">Coach G <span class="badge">PRO</span></div>
+          <div class="coach-sub">NSCA · ACSM 级 · 减脂 / 营养 / 训练 / 恢复</div>
+        </div>
+      </div>
+      <div class="model-pill"><span class="pulse"></span>Grok 4.7 · OCI</div>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="welcome" id="welcome">
+        <div class="hero">
+          <div class="hero-kicker">YOUR ELITE COACH</div>
+          <h1>今天，<span class="hl">比昨天更强</span>。</h1>
+          <p>我是 Coach G。减脂、饮食与热量、训练量搭配、每日课表、器械动作、筋膜枪与恢复——给我你的情况，我给你能直接执行的专业方案。</p>
+        </div>
+        <div class="feature-grid">
+          <button class="feature" data-q="根据我的档案，给我安排今天的训练课表，包含热身、主项、辅助、有氧和拉伸，写清组数、次数、RPE 和组间休息。"><i>🏋️</i><b>今日训练</b><span>完整课表 · 组数次数</span></button>
+          <button class="feature" data-q="根据我的档案，制定一份减脂饮食方案：计算每日热量和三大营养素克数，并给出一日三餐+加餐的示例食谱（中国家常/外卖可执行），用饼图展示营养素比例。"><i>🥗</i><b>减脂饮食</b><span>热量 · 宏量 · 食谱</span></button>
+          <button class="feature" data-q="请帮我做一份每周训练计划，平衡力量训练、有氧和热量缺口，用表格列出每天内容，并画一张一周安排的图示。"><i>📅</i><b>一周计划</b><span>力量 · 有氧 · 休息</span></button>
+          <button class="feature" data-q="训练后怎么用筋膜枪放松？请告诉我针对主要肌群的部位、枪头、档位、时长和禁忌，并画一张人体部位示意图。"><i>💆</i><b>筋膜枪放松</b><span>部位 · 时长 · 禁忌</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer-wrap">
+      <div class="quick" id="quick">
+        <button data-q="根据我的档案，给我安排今天的训练课表，写清组数、次数、RPE 和组间休息。">今日训练</button>
+        <button data-q="根据我的档案，制定减脂饮食方案：每日热量、三大营养素克数和示例食谱，并用饼图展示营养素比例。">减脂饮食方案</button>
+        <button data-q="请根据我的档案计算 BMR、TDEE、减脂期目标热量和三大营养素克数，展示计算过程。">热量计算</button>
+        <button data-q="请指导我正确使用健身房常见器械（例如高位下拉、坐姿划船、腿举、史密斯深蹲）：调节方法、动作要领、常见错误。">器械指导</button>
+        <button data-q="训练后怎么用筋膜枪放松？针对主要肌群给出部位、枪头、档位、时长和禁忌，并画一张部位示意图。">筋膜枪放松</button>
+        <button data-q="帮我制定一周训练计划，平衡力量、有氧和热量缺口，用表格列出并画一张一周安排图。">一周计划</button>
+        <button data-q="我最近减脂进入平台期了，体重两周没动，应该怎么调整饮食和训练？">平台期突破</button>
+        <button data-q="如何提高睡眠质量和训练后恢复？给我一份恢复流程图。">睡眠与恢复</button>
+      </div>
+      <form class="composer" id="composer">
+        <textarea id="input" rows="1" placeholder="问问 Coach G：比如“我 80kg 想三个月减 8kg，怎么吃怎么练？”" maxlength="4000"></textarea>
+        <button type="submit" class="send" id="sendBtn" aria-label="发送">
+          <svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2.5-6.5L4 12z" fill="currentColor"/></svg>
+        </button>
+      </form>
+      <div class="disclaimer">AI 建议仅供参考，不能替代医生或康复师诊断。有伤病或慢性病请先咨询专业人士。</div>
+    </div>
+  </main>
+</div>
+
+<script src="/static/vendor/marked.min.js"></script>
+<script src="/static/vendor/purify.min.js"></script>
+<script src="/static/vendor/mermaid.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
